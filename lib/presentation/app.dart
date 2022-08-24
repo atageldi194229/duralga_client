@@ -5,6 +5,13 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text("Congratulations!"));
+    return const MaterialApp(
+      title: "Duralga Client",
+      home: Scaffold(
+        body: Center(
+          child: Text("Congratulations!"),
+        ),
+      ),
+    );
   }
 }
