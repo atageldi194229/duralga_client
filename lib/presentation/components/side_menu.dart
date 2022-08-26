@@ -1,9 +1,15 @@
 import 'package:duralga_client/presentation/constants.dart';
+import 'package:duralga_client/presentation/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SideMenu extends HookWidget {
-  const SideMenu({Key? key}) : super(key: key);
+  const SideMenu({
+    Key? key,
+    this.scrollController,
+  }) : super(key: key);
+
+  final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -17,19 +23,41 @@ class SideMenu extends HookWidget {
 
     return Drawer(
       child: Container(
+        padding: const EdgeInsets.all(defaultPadding),
         constraints: const BoxConstraints(minWidth: 500),
-        child: Padding(
-          padding: const EdgeInsets.all(defaultPadding),
-          child: Column(
-            children: [
-              const SearchField(),
-              const SizedBox(height: defaultPadding),
-              _TabBars(
-                tabs: tabs,
-              ),
-              const SizedBox(height: defaultPadding),
-            ],
-          ),
+        child: ListView(
+          controller: scrollController,
+          shrinkWrap: true,
+          children: [
+            if (Responsive.isMobile(context)) const CenteredStick(),
+            const SizedBox(height: defaultPadding),
+            const SearchField(),
+            const SizedBox(height: defaultPadding),
+            _TabBars(
+              tabs: tabs,
+            ),
+            const SizedBox(height: defaultPadding),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CenteredStick extends StatelessWidget {
+  const CenteredStick({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: 50,
+        height: 5,
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          color: Theme.of(context).textTheme.bodyMedium!.color,
         ),
       ),
     );
@@ -58,6 +86,7 @@ class _TabBars extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = useScrollController();
+    final selected = useState<int>(0);
 
     return Scrollbar(
       controller: controller,
@@ -67,38 +96,42 @@ class _TabBars extends HookWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: tabs
-              .map<Widget>(
-                (e) => Container(
-                  margin: const EdgeInsets.only(
-                    right: defaultPadding,
-                  ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          width: 2,
-                          color:
-                              Theme.of(context).textTheme.bodyMedium!.color ??
-                                  Colors.grey,
-                        ),
-                      ),
-                    ),
-                    child: InkWell(
-                      borderRadius: borderRadius,
-                      onTap: () {},
-                      child: Padding(
-                        padding: const EdgeInsets.all(defaultPadding),
-                        child: Text(
-                          e.name,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ),
+          children: List.generate(
+            tabs.length,
+            (index) => Container(
+              margin: const EdgeInsets.only(
+                right: defaultPadding,
+              ),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                decoration: BoxDecoration(
+                  border: (index == selected.value)
+                      ? Border(
+                          bottom: BorderSide(
+                            width: 2,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium!.color ??
+                                    Colors.grey,
+                          ),
+                        )
+                      : null,
+                ),
+                child: InkWell(
+                  borderRadius: borderRadius,
+                  onTap: () {
+                    selected.value = index;
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(defaultPadding),
+                    child: Text(
+                      tabs[index].name,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ),
                 ),
-              )
-              .toList(),
+              ),
+            ),
+          ).toList(),
         ),
       ),
     );
