@@ -1,4 +1,5 @@
 import 'package:duralga_client/presentation/components/side_menu.dart';
+import 'package:duralga_client/presentation/responsive.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -12,19 +13,35 @@ class App extends StatelessWidget {
       theme: ThemeData.dark(),
       home: Scaffold(
         body: SafeArea(
-          child: Row(
-            children: const [
-              Expanded(
-                child: SideMenu(),
-              ),
-              Expanded(
-                flex: 3,
-                child: Center(
-                  child: Text("Congratulations!"),
+          child: Builder(builder: (context) {
+            return Row(
+              children: [
+                if (!Responsive.isMobile(context)) const SideMenu(),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Congratulations!",
+                          ),
+                        ],
+                      ),
+                      if (Responsive.isMobile(context))
+                        DraggableScrollableSheet(
+                          builder: (context, scrollController) {
+                            return const SideMenu();
+                          },
+                        )
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            );
+          }),
         ),
       ),
     );

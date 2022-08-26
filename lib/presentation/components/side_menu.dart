@@ -16,18 +16,20 @@ class SideMenu extends HookWidget {
     ];
 
     return Drawer(
-      child: Padding(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: Column(
-          children: [
-            const SearchField(),
-            const SizedBox(height: defaultPadding),
-            _TabBars(
-              tabs: tabs,
-            ),
-            const SizedBox(height: defaultPadding),
-            
-          ],
+      child: Container(
+        constraints: const BoxConstraints(minWidth: 500),
+        child: Padding(
+          padding: const EdgeInsets.all(defaultPadding),
+          child: Column(
+            children: [
+              const SearchField(),
+              const SizedBox(height: defaultPadding),
+              _TabBars(
+                tabs: tabs,
+              ),
+              const SizedBox(height: defaultPadding),
+            ],
+          ),
         ),
       ),
     );
