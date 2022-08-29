@@ -52,6 +52,12 @@ class CustomMap extends StatelessWidget {
           fitBoundsOptions: const FitBoundsOptions(
             padding: EdgeInsets.all(defaultPadding * 6),
           ),
+          animationsOptions: const AnimationsOptions(
+            // centerMarker: Duration(seconds: 0),
+            // fitBound: Duration(seconds: 0),
+            spiderfy: Duration(seconds: 0),
+            zoom: Duration(seconds: 0),
+          ),
           markers: markers.toList(),
           polygonOptions: const PolygonOptions(
               // borderColor: kBlueColor,
