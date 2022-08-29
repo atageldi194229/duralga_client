@@ -8,24 +8,21 @@ class DraggableScrollableSheetSideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: Colors.amber.withOpacity(0.5),
-      child: DraggableScrollableSheet(
-        initialChildSize: 0.4,
-        maxChildSize: 1,
-        minChildSize: 0.05,
-        snapSizes: const [0.5],
-        snap: true,
-        expand: false,
-        builder: (context, scrollController) {
-          return SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: SideMenu(
-              scrollController: scrollController,
-            ),
-          );
-        },
-      ),
+    return DraggableScrollableSheet(
+      initialChildSize: 0.4,
+      maxChildSize: 1,
+      minChildSize: 0.05,
+      snapSizes: const [0.5],
+      snap: true,
+      expand: false,
+      builder: (context, scrollController) {
+        return SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: SideMenu(
+            scrollController: scrollController,
+          ),
+        );
+      },
     );
   }
 }
