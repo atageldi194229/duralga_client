@@ -70,21 +70,16 @@ class CustomMap extends StatelessWidget {
     final markers = stops
         .map<Marker>(
           (e) => Marker(
-            width: 100.0,
-            height: 100.0,
             point: LatLng(
               double.parse(e.location[0]),
               double.parse(e.location[1]),
             ),
-            builder: (ctx) => const Icon(
-              Icons.location_on,
-              color: Colors.blue,
+            anchorPos: AnchorPos.align(AnchorAlign.top),
+            builder: (context) => Image.asset(
+              "assets/png/bus_stop.png",
+              width: 20,
+              height: 20,
             ),
-            // builder: (context) => SvgPicture.asset(
-            //   "assets/svg/bus_stop.svg",
-            //   width: 20,
-            //   height: 20,
-            // ),
           ),
         )
         .toList();
