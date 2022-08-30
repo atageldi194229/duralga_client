@@ -81,6 +81,11 @@ class CustomMap extends StatelessWidget {
               Icons.location_on,
               color: Colors.blue,
             ),
+            // builder: (context) => SvgPicture.asset(
+            //   "assets/svg/bus_stop.svg",
+            //   width: 20,
+            //   height: 20,
+            // ),
           ),
         )
         .toList();
@@ -97,8 +102,9 @@ class CustomMap extends StatelessWidget {
       layers: [
         TileLayerOptions(
           tileProvider: CachedTileProvider(),
-          urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          subdomains: ['a', 'b', 'c'],
+          // urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+          // subdomains: ['a', 'b', 'c'],
+          urlTemplate: "http://geo.asmantiz.com/tile/{z}/{x}/{y}.png",
         ),
         if (polylines != null)
           PolylineLayerOptions(
