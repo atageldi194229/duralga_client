@@ -1,4 +1,6 @@
+import 'package:duralga_client/presentation/components/side_menu/centered_stick.dart';
 import 'package:duralga_client/presentation/components/side_menu/side_menu.dart';
+import 'package:duralga_client/presentation/constants.dart';
 import 'package:flutter/material.dart';
 
 class DraggableScrollableSheetSideMenu extends StatelessWidget {
@@ -20,6 +22,12 @@ class DraggableScrollableSheetSideMenu extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: SideMenu(
             scrollController: scrollController,
+            top: Column(
+              children: const [
+                CenteredStick(),
+                SizedBox(height: defaultPadding),
+              ],
+            ),
           ),
         );
       },

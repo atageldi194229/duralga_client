@@ -47,7 +47,7 @@ class CustomMap extends StatelessWidget {
         MarkerClusterLayerOptions(
           centerMarkerOnClick: true,
           zoomToBoundsOnClick: true,
-          maxClusterRadius: 150,
+          maxClusterRadius: 100,
           size: const Size(40, 40),
           fitBoundsOptions: const FitBoundsOptions(
             padding: EdgeInsets.all(defaultPadding * 6),

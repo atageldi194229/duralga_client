@@ -4,9 +4,7 @@ import 'package:duralga_client/data/errors/app_error.dart';
 import 'package:duralga_client/data/models/route_model.dart';
 import 'package:duralga_client/data/models/stop_model.dart';
 import 'package:duralga_client/data/repositories/duralga_data_repository.dart';
-import 'package:flutter/foundation.dart' show immutable;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
@@ -24,7 +22,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   }) : super(AppInitial()) {
     on<LoadDataAppEvent>((event, emit) async {
       try {
-        final currentLocation = await getCurrentLocation();
+        // final currentLocation = await getCurrentLocation();
 
         // start loading
         loadingBloc.add(const StartLoadingEvent());
@@ -34,7 +32,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         emit(state.copyWith(
           stops: data.stops,
           routes: data.routes,
-          currentLocation: currentLocation,
+          // currentLocation: currentLocation,
         ));
 
         // stop loading

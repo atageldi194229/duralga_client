@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 class CenteredStick extends StatelessWidget {
   const CenteredStick({
     Key? key,
+    this.color,
   }) : super(key: key);
+
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +17,7 @@ class CenteredStick extends StatelessWidget {
         height: 5,
         decoration: BoxDecoration(
           borderRadius: borderRadius,
-          color: Theme.of(context).textTheme.bodyMedium!.color,
+          color: color ?? Theme.of(context).textTheme.bodyMedium!.color,
         ),
       ),
     );

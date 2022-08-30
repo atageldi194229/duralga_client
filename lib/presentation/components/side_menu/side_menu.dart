@@ -1,16 +1,20 @@
-import 'package:duralga_client/presentation/components/side_menu/centered_stick.dart';
+import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
+import 'package:duralga_client/presentation/components/side_menu/route_list.dart';
 import 'package:duralga_client/presentation/components/side_menu/search_field.dart';
 import 'package:duralga_client/presentation/constants.dart';
 import 'package:duralga_client/presentation/responsive.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SideMenu extends HookWidget {
   const SideMenu({
     Key? key,
     this.scrollController,
+    this.top,
   }) : super(key: key);
 
+  final Widget? top;
   final ScrollController? scrollController;
 
   @override
@@ -24,24 +28,81 @@ class SideMenu extends HookWidget {
     ];
 
     return Drawer(
+      width: !Responsive.isDesktop(context) ? 350 : null,
       child: Container(
-        padding: const EdgeInsets.all(defaultPadding),
-        constraints: const BoxConstraints(minWidth: 500),
-        child: ListView(
-          controller: scrollController,
-          shrinkWrap: true,
-          children: [
-            if (Responsive.isMobile(context)) const CenteredStick(),
-            const SizedBox(height: defaultPadding),
-            const SearchField(),
-            const SizedBox(height: defaultPadding),
-            _TabBars(
-              tabs: tabs,
-            ),
-            const SizedBox(height: defaultPadding),
-          ],
-        ),
-      ),
+          padding: const EdgeInsets.all(defaultPadding),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (top != null) top!,
+              Expanded(
+                child: CustomScrollView(
+                  controller: scrollController,
+                  slivers: [
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const SearchField(),
+                              const SizedBox(height: defaultPadding),
+                              _TabBars(
+                                tabs: tabs,
+                              ),
+                              const SizedBox(height: defaultPadding),
+                            ],
+                          );
+                        },
+                        childCount: 1,
+                      ),
+                    ),
+
+                    // const SliverAppBar(
+                    //   pinned: true,
+                    //   flexibleSpace: FlexibleSpaceBar(
+                    //     title: Text(''),
+                    //   ),
+                    // ),
+                    BlocBuilder<AppBloc, AppState>(
+                      buildWhen: (p, c) => p.routes.length != c.routes.length,
+                      builder: (context, state) {
+                        return RouteList(
+                          state.routes.toList(),
+                          // scrollController: scrollController,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )
+          //   child: Column(
+          //     mainAxisSize: MainAxisSize.min,
+          //     // controller: scrollController,
+          //     // shrinkWrap: true,
+          //     children: [
+          //       const SearchField(),
+          //       const SizedBox(height: defaultPadding),
+          //       _TabBars(
+          //         tabs: tabs,
+          //       ),
+          //       const SizedBox(height: defaultPadding),
+          //       Expanded(
+          //         child: BlocBuilder<AppBloc, AppState>(
+          //           buildWhen: (p, c) => p.routes.length != c.routes.length,
+          //           builder: (context, state) {
+          //             return RouteList(
+          //               state.routes.toList(),
+          //               // scrollController: scrollController,
+          //             );
+          //           },
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          ),
     );
   }
 }
