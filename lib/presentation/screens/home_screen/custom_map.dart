@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
 import 'package:duralga_client/data/models/stop_model.dart';
 import 'package:duralga_client/presentation/constants.dart';
@@ -100,12 +99,7 @@ class CustomMap extends StatelessWidget {
         minZoom: 8.0,
       ),
       layers: [
-        TileLayerOptions(
-          tileProvider: CachedTileProvider(),
-          // urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          // subdomains: ['a', 'b', 'c'],
-          urlTemplate: "http://geo.asmantiz.com/tile/{z}/{x}/{y}.png",
-        ),
+        tileLayerOptions,
         if (polylines != null)
           PolylineLayerOptions(
             polylineCulling: false,
@@ -139,16 +133,6 @@ class CustomMap extends StatelessWidget {
           },
         ),
       ],
-    );
-  }
-}
-
-class CachedTileProvider extends TileProvider {
-  @override
-  ImageProvider getImage(Coords<num> coords, TileLayerOptions options) {
-    return CachedNetworkImageProvider(
-      errorListener: () => const Icon(Icons.error),
-      getTileUrl(coords, options),
     );
   }
 }
