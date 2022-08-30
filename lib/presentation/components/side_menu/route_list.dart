@@ -1,26 +1,33 @@
+import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
 import 'package:duralga_client/data/models/route_model.dart';
 import 'package:duralga_client/presentation/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RouteList extends StatelessWidget {
-  const RouteList(
-    this.routes, {
+  const RouteList({
     Key? key,
     this.scrollController,
   }) : super(key: key);
 
-  final List<RouteModel> routes;
   final ScrollController? scrollController;
 
   @override
   Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return RouteRow(routes[index]);
-        },
-        childCount: routes.length,
-      ),
+    return BlocBuilder<AppBloc, AppState>(
+      buildWhen: (p, c) => p.routes.length != c.routes.length,
+      builder: (context, state) {
+        final routes = state.routes.toList();
+
+        return SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return RouteRow(routes[index]);
+            },
+            childCount: routes.length,
+          ),
+        );
+      },
     );
   }
 }
@@ -35,7 +42,9 @@ class RouteRow extends StatelessWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          context.read<AppBloc>().add(AppEventSelectRoute(route));
+        },
         child: ListTile(
           leading: Container(
             padding: const EdgeInsets.all(defaultPadding),

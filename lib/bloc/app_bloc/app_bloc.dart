@@ -20,7 +20,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     required this.appErrorBloc,
     required this.loadingBloc,
   }) : super(AppInitial()) {
-    on<LoadDataAppEvent>((event, emit) async {
+    on<AppEventLoadData>((event, emit) async {
       try {
         // final currentLocation = await getCurrentLocation();
 
@@ -29,7 +29,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
         final data = await DuralgaDataRepository().getData();
 
-        emit(state.copyWith(
+        emit(AppState(
           stops: data.stops,
           routes: data.routes,
           // currentLocation: currentLocation,
@@ -43,6 +43,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         loadingBloc.add(const StopLoadingEvent());
         appErrorBloc.add(const AppErrorAddEvent(LoadError()));
       }
+    });
+
+    on<AppEventSelectRoute>((event, emit) {
+      emit(AppRouteSelectedState(
+        stops: state.stops,
+        routes: state.routes,
+        route: event.route,
+      ));
     });
   }
 

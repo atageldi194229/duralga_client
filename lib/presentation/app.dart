@@ -71,7 +71,7 @@ class App extends StatelessWidget {
       loadingBloc: loadingBloc,
     );
 
-    appBloc.add(LoadDataAppEvent());
+    appBloc.add(AppEventLoadData());
 
     return [
       BlocProvider<LoadingBloc>(create: (_) => loadingBloc),

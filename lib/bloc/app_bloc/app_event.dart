@@ -4,4 +4,10 @@ part of 'app_bloc.dart';
 abstract class AppEvent {}
 
 @immutable
-class LoadDataAppEvent extends AppEvent {}
+class AppEventLoadData extends AppEvent {}
+
+@immutable
+class AppEventSelectRoute extends AppEvent {
+  final RouteModel route;
+  AppEventSelectRoute(this.route);
+}

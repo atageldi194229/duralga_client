@@ -24,24 +24,20 @@ class AppState {
       currentLocation: currentLocation ?? this.currentLocation,
     );
   }
-
-  @override
-  bool operator ==(covariant AppState other) {
-    if (identical(this, other)) return true;
-
-    return other.stops == stops &&
-        other.routes == routes &&
-        other.currentLocation == currentLocation;
-  }
-
-  @override
-  int get hashCode => Object.hash(
-        stops.hashCode,
-        routes.hashCode,
-        currentLocation.hashCode,
-      );
 }
 
+@immutable
+class AppRouteSelectedState extends AppState {
+  final RouteModel route;
+
+  const AppRouteSelectedState({
+    required super.stops,
+    required super.routes,
+    required this.route,
+  });
+}
+
+@immutable
 class AppInitial extends AppState {
   AppInitial()
       : super(

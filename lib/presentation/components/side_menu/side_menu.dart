@@ -1,10 +1,8 @@
-import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
 import 'package:duralga_client/presentation/components/side_menu/route_list.dart';
 import 'package:duralga_client/presentation/components/side_menu/search_field.dart';
 import 'package:duralga_client/presentation/constants.dart';
 import 'package:duralga_client/presentation/responsive.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SideMenu extends HookWidget {
@@ -64,15 +62,7 @@ class SideMenu extends HookWidget {
                     //     title: Text(''),
                     //   ),
                     // ),
-                    BlocBuilder<AppBloc, AppState>(
-                      buildWhen: (p, c) => p.routes.length != c.routes.length,
-                      builder: (context, state) {
-                        return RouteList(
-                          state.routes.toList(),
-                          // scrollController: scrollController,
-                        );
-                      },
-                    ),
+                    const RouteList(),
                   ],
                 ),
               ),
