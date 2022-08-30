@@ -28,7 +28,7 @@ class SideMenu extends HookWidget {
     ];
 
     return Drawer(
-      width: !Responsive.isDesktop(context) ? 350 : null,
+      width: Responsive.isDesktop(context) ? 350 : null,
       child: Container(
           padding: const EdgeInsets.all(defaultPadding),
           child: Column(

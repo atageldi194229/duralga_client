@@ -33,35 +33,44 @@ class RouteRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: ListTile(
-        leading: Container(
-          padding: const EdgeInsets.all(defaultPadding),
-          decoration: const BoxDecoration(
-            color: Colors.blue,
-            borderRadius: borderRadius,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () {},
+        child: ListTile(
+          leading: Container(
+            padding: const EdgeInsets.all(defaultPadding),
+            decoration: const BoxDecoration(
+              color: Colors.blue,
+              borderRadius: borderRadius,
+            ),
+            child: Text("${route.number}"),
           ),
-          child: Text("${route.number}"),
-        ),
-        title: Text(
-          route.description.join(' --->\n'),
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text("Interval"),
-            const SizedBox(width: defaultPadding),
-            Container(
-              padding: const EdgeInsets.all(defaultPadding),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.blue,
+          title: Text(
+            route.description.join(' --->\n'),
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: Theme.of(context).textTheme.bodyLarge!.color,
                 ),
-                borderRadius: borderRadius / 2,
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Interval",
+                style: Theme.of(context).textTheme.bodySmall,
               ),
-              child: const Text("12m"),
-            )
-          ],
+              const SizedBox(width: defaultPadding),
+              Container(
+                padding: const EdgeInsets.all(defaultPadding),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blue,
+                  ),
+                  borderRadius: borderRadius / 2,
+                ),
+                child: const Text("12m"),
+              )
+            ],
+          ),
         ),
       ),
     );
