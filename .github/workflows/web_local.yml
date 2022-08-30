@@ -1,4 +1,4 @@
-name: Gh-Pages
+name: Local-Pages
 
 on:
   push:
@@ -13,4 +13,4 @@ jobs:
       - uses: subosito/flutter-action@v1
       - uses: bluefireteam/flutter-gh-pages@v7
         with:
-          targetBranch: local_pages
+          targetBranch: local-pages
