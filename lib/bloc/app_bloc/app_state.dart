@@ -38,6 +38,16 @@ class AppRouteSelectedState extends AppState {
 }
 
 @immutable
+class AppStateSearch extends AppState {
+  final String search;
+  AppStateSearch(this.search, AppState state)
+      : super(
+          routes: state.routes,
+          stops: state.stops,
+        );
+}
+
+@immutable
 class AppInitial extends AppState {
   AppInitial()
       : super(

@@ -11,3 +11,9 @@ class AppEventSelectRoute extends AppEvent {
   final RouteModel route;
   AppEventSelectRoute(this.route);
 }
+
+@immutable
+class AppEventSearch extends AppEvent {
+  final String search;
+  AppEventSearch(this.search);
+}

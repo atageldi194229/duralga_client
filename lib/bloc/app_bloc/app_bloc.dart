@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:location/location.dart';
+import 'package:string_similarity/string_similarity.dart';
 
 part 'app_event.dart';
 part 'app_state.dart';
@@ -52,6 +53,33 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         route: event.route,
       ));
     });
+
+    on<AppEventSearch>((event, emit) {
+      emit(AppStateSearch(event.search, state));
+    });
+  }
+
+  List<RouteModel> getFilteredRoutesBySearch(AppStateSearch state) {
+    final search = state.search.toLowerCase();
+
+    var arr = state.routes
+        .map((e) => [
+              StringSimilarity.compareTwoStrings(
+                search,
+                e.number.toString() + e.description.join(),
+              ),
+              e,
+            ])
+        .toList();
+
+    arr.sort((a, b) => (b[0] as double).compareTo(a[0] as double));
+
+    return arr.map<RouteModel>((e) => (e[1] as RouteModel)).toList();
+
+    // return state.routes.where((e) {
+    //   return e.number.toString().contains(search) ||
+    //       e.description.join("").toLowerCase().contains(search);
+    // }).toList();
   }
 
   Future<LatLng?> getCurrentLocation() async {

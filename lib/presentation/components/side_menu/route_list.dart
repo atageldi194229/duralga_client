@@ -15,9 +15,14 @@ class RouteList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppBloc, AppState>(
-      buildWhen: (p, c) => p.routes.length != c.routes.length,
+      buildWhen: (p, c) =>
+          p.routes.length != c.routes.length || c is AppStateSearch,
       builder: (context, state) {
-        final routes = state.routes.toList();
+        var routes = state.routes.toList();
+
+        if (state is AppStateSearch) {
+          routes = context.read<AppBloc>().getFilteredRoutesBySearch(state);
+        }
 
         return SliverList(
           delegate: SliverChildBuilderDelegate(

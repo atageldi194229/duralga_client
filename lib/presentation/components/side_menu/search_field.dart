@@ -1,5 +1,7 @@
+import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
 import 'package:duralga_client/presentation/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchField extends StatelessWidget {
   const SearchField({
@@ -9,6 +11,9 @@ class SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: (value) {
+        context.read<AppBloc>().add(AppEventSearch(value));
+      },
       decoration: InputDecoration(
         hintText: "Search routes",
         filled: true,

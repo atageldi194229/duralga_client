@@ -48,6 +48,7 @@ dependencies:
   latlong2: ^0.8.1
   flutter_map_marker_cluster: ^0.5.4
   flutter_svg: ^1.1.4
+  string_similarity: ^2.0.0
 
 dev_dependencies:
   flutter_test:
