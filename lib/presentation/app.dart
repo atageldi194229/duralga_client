@@ -1,6 +1,7 @@
 import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
 import 'package:duralga_client/bloc/app_error_bloc/app_error_bloc.dart';
 import 'package:duralga_client/bloc/loading_bloc/loading_bloc.dart';
+import 'package:duralga_client/bloc/map_bloc/map_bloc.dart';
 import 'package:duralga_client/presentation/components/dialogs/show_app_error.dart';
 import 'package:duralga_client/presentation/components/loading/loading_screen.dart';
 import 'package:duralga_client/presentation/constants.dart';
@@ -67,16 +68,20 @@ class App extends StatelessWidget {
     final loadingBloc = LoadingBloc();
     final appErrorBloc = AppErrorBloc();
 
+    final mapBloc = MapBloc();
+
     final appBloc = AppBloc(
       appErrorBloc: appErrorBloc,
       loadingBloc: loadingBloc,
     );
 
     appBloc.add(AppEventLoadData());
+    mapBloc.add(MapEventLoadCurrentLocation());
 
     return [
       BlocProvider<LoadingBloc>(create: (_) => loadingBloc),
       BlocProvider<AppErrorBloc>(create: (_) => appErrorBloc),
+      BlocProvider<MapBloc>(create: (_) => mapBloc),
       BlocProvider<AppBloc>(create: (_) => appBloc),
     ];
   }
