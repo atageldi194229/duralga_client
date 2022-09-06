@@ -1,13 +1,17 @@
 import 'package:flutter/foundation.dart' show immutable;
 
+typedef CallbackFunction = Function?;
+
 @immutable
 abstract class AppError {
   final String title;
   final String description;
+  final CallbackFunction callback;
 
   const AppError({
     required this.title,
     required this.description,
+    this.callback,
   });
 
   @override
@@ -23,9 +27,11 @@ abstract class AppError {
 
 @immutable
 class LoadError extends AppError {
-  const LoadError()
-      : super(
+  const LoadError({
+    CallbackFunction callback,
+  }) : super(
           title: "Load error",
           description: "Maybe internet connection error",
+          callback: callback,
         );
 }

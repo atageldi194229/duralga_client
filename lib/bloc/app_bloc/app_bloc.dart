@@ -1,9 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:duralga_client/bloc/app_error_bloc/app_error_bloc.dart';
 import 'package:duralga_client/bloc/loading_bloc/loading_bloc.dart';
 import 'package:duralga_client/data/errors/app_error.dart';
+import 'package:duralga_client/data/models/duralga_data_model.dart';
 import 'package:duralga_client/data/models/route_model.dart';
 import 'package:duralga_client/data/models/stop_model.dart';
 import 'package:duralga_client/data/repositories/duralga_data_repository.dart';
+import 'package:duralga_client/utils/bloc_navigator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
@@ -17,50 +21,121 @@ class AppBloc extends Bloc<AppEvent, AppState> {
   final AppErrorBloc appErrorBloc;
   final LoadingBloc loadingBloc;
 
+  final BlocNavigator _navigator = BlocNavigator(CustomRouter(
+    AppState,
+    [
+      CustomRouter(AppStateRouteList, [
+        CustomRouter(AppStateRouteSelected),
+      ]),
+      CustomRouter(AppStateStopList, [
+        CustomRouter(AppStateStopSelected),
+      ]),
+      CustomRouter(AppStateSearch),
+    ],
+  ));
+
+  Map<int, List<RouteModel>> stopRoutesMap = {};
+
   AppBloc({
     required this.appErrorBloc,
     required this.loadingBloc,
   }) : super(AppInitial()) {
     on<AppEventLoadData>((event, emit) async {
       try {
-        // final currentLocation = await getCurrentLocation();
-
         // start loading
         loadingBloc.add(const StartLoadingEvent());
 
         final data = await DuralgaDataRepository().getData();
 
-        emit(AppState(
+        data.routes.sort((a, b) => a.number.compareTo(b.number));
+
+        final state = BaseAppState(
           stops: data.stops,
           routes: data.routes,
-          // currentLocation: currentLocation,
+        );
+
+        emit(_navigator.push(
+          AppStateRouteList(state: state),
         ));
 
         // stop loading
         loadingBloc.add(const StopLoadingEvent());
+
+        generateStopRoutesMap(data);
+
+        return;
+      } on DioError catch (_) {
       } catch (error) {
         debugPrint(error.toString());
-        // stop loading & show load error dialog
-        loadingBloc.add(const StopLoadingEvent());
-        appErrorBloc.add(const AppErrorAddEvent(LoadError()));
       }
+
+      // stop loading & show load error dialog
+      loadingBloc.add(const StopLoadingEvent());
+      appErrorBloc.add(const AppErrorAddEvent(LoadError()));
     });
 
     on<AppEventSelectRoute>((event, emit) {
-      emit(AppRouteSelectedState(
-        stops: state.stops,
-        routes: state.routes,
+      emit(_navigator.push(AppStateRouteSelected(
+        state: state,
         route: event.route,
-      ));
+      )));
     });
 
-    on<AppEventSearch>((event, emit) {
-      emit(AppStateSearch(event.search, state));
+    on<AppEventSelectStop>((event, emit) {
+      emit(_navigator.push(AppStateStopSelected(
+        state: state,
+        stop: event.stop,
+      )));
     });
+
+    on<AppEventGoToRouteList>((event, emit) {
+      emit(_navigator.push(AppStateRouteList(state: state)));
+    });
+
+    on<AppEventGoToStopList>((event, emit) {
+      emit(_navigator.push(AppStateStopList(state: state)));
+    });
+
+    on<AppEventGoToBack>((event, emit) => emit(_navigator.pop()));
+
+    on<AppEventSearch>((event, emit) {
+      emit(AppStateSearch(
+        search: event.search,
+        state: state,
+      ));
+    });
+  }
+
+  generateStopRoutesMap(DuralgaDataModel data) {
+    Map<int, List<RouteModel>> m = {};
+
+    for (var route in data.routes) {
+      final stopIds = [...route.startStops, ...route.endStops];
+
+      for (var stopId in stopIds) {
+        if (!m.containsKey(stopId) || m[stopId] == null) {
+          m[stopId] = [];
+        }
+
+        m[stopId]!.add(route);
+      }
+    }
+
+    stopRoutesMap = m;
   }
 
   List<RouteModel> getFilteredRoutesBySearch(AppStateSearch state) {
     final search = state.search.toLowerCase();
+
+    if (search.isEmpty) {
+      return state.routes.toList();
+    }
+
+    if (int.tryParse(search) != null) {
+      return state.routes
+          .where((e) => e.number.toString().startsWith(search))
+          .toList();
+    }
 
     var arr = state.routes
         .map((e) => [
@@ -75,11 +150,20 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     arr.sort((a, b) => (b[0] as double).compareTo(a[0] as double));
 
     return arr.map<RouteModel>((e) => (e[1] as RouteModel)).toList();
+  }
 
-    // return state.routes.where((e) {
-    //   return e.number.toString().contains(search) ||
-    //       e.description.join("").toLowerCase().contains(search);
-    // }).toList();
+  List<StopModel> getRouteStops(RouteModel route) {
+    return state.stops
+        .where((e) =>
+            route.startStops.contains(e.stopId) ||
+            route.endStops.contains(e.stopId))
+        .toList();
+  }
+
+  List<RouteModel> getStopRoutes(StopModel stop) {
+    return stopRoutesMap.containsKey(stop.stopId)
+        ? stopRoutesMap[stop.stopId]!
+        : [];
   }
 
   Future<LatLng?> getCurrentLocation() async {

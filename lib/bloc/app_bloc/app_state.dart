@@ -2,45 +2,19 @@
 part of 'app_bloc.dart';
 
 @immutable
-class AppState {
+class BaseAppState {
   final Iterable<StopModel> stops;
   final Iterable<RouteModel> routes;
-  final LatLng? currentLocation;
 
-  const AppState({
+  const BaseAppState({
     required this.stops,
     required this.routes,
-    this.currentLocation,
-  });
-
-  AppState copyWith({
-    Iterable<StopModel>? stops,
-    Iterable<RouteModel>? routes,
-    LatLng? currentLocation,
-  }) {
-    return AppState(
-      stops: stops ?? this.stops,
-      routes: routes ?? this.routes,
-      currentLocation: currentLocation ?? this.currentLocation,
-    );
-  }
-}
-
-@immutable
-class AppRouteSelectedState extends AppState {
-  final RouteModel route;
-
-  const AppRouteSelectedState({
-    required super.stops,
-    required super.routes,
-    required this.route,
   });
 }
 
 @immutable
-class AppStateSearch extends AppState {
-  final String search;
-  AppStateSearch(this.search, AppState state)
+class AppState extends BaseAppState {
+  AppState(BaseAppState state)
       : super(
           routes: state.routes,
           stops: state.stops,
@@ -48,10 +22,53 @@ class AppStateSearch extends AppState {
 }
 
 @immutable
+class AppStateRouteList extends AppState {
+  AppStateRouteList({
+    required BaseAppState state,
+  }) : super(state);
+}
+
+@immutable
+class AppStateStopList extends AppState {
+  AppStateStopList({
+    required BaseAppState state,
+  }) : super(state);
+}
+
+@immutable
+class AppStateRouteSelected extends AppStateRouteList {
+  final RouteModel route;
+
+  AppStateRouteSelected({
+    required super.state,
+    required this.route,
+  });
+}
+
+@immutable
+class AppStateStopSelected extends AppStateStopList {
+  final StopModel stop;
+
+  AppStateStopSelected({
+    required super.state,
+    required this.stop,
+  });
+}
+
+@immutable
+class AppStateSearch extends AppState {
+  final String search;
+  AppStateSearch({
+    required this.search,
+    required BaseAppState state,
+  }) : super(state);
+}
+
+@immutable
 class AppInitial extends AppState {
   AppInitial()
-      : super(
+      : super(const BaseAppState(
           stops: [],
           routes: [],
-        );
+        ));
 }

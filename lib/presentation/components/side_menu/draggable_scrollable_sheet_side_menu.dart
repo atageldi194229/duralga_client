@@ -11,10 +11,10 @@ class DraggableScrollableSheetSideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.4,
+      initialChildSize: 0.6,
       maxChildSize: 1,
       minChildSize: 0.05,
-      snapSizes: const [0.5],
+      snapSizes: const [0.3, 0.6],
       snap: true,
       expand: false,
       builder: (context, scrollController) {
@@ -24,8 +24,9 @@ class DraggableScrollableSheetSideMenu extends StatelessWidget {
             scrollController: scrollController,
             top: Column(
               children: const [
-                CenteredStick(),
                 SizedBox(height: defaultPadding),
+                CenteredStick(),
+                // SizedBox(height: defaultPadding),
               ],
             ),
           ),

@@ -27,7 +27,12 @@ class RouteList extends StatelessWidget {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return RouteRow(routes[index]);
+              return Column(
+                children: [
+                  RouteRow(routes[index]),
+                  const Divider(),
+                ],
+              );
             },
             childCount: routes.length,
           ),
@@ -44,47 +49,55 @@ class RouteRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () {
-          context.read<AppBloc>().add(AppEventSelectRoute(route));
-        },
-        child: ListTile(
-          leading: Container(
-            padding: const EdgeInsets.all(defaultPadding),
-            decoration: const BoxDecoration(
-              color: Colors.blue,
-              borderRadius: borderRadius,
+    return InkWell(
+      onTap: () {
+        context.read<AppBloc>().add(AppEventSelectRoute(route));
+      },
+      child: ListTile(
+        leading: Container(
+          width: 40,
+          height: 25,
+          // alignment: Alignment.center,
+          // padding: const EdgeInsets.symmetric(
+          //   horizontal: defaultPadding,
+          //   vertical: defaultPadding / 2,
+          // ),
+          decoration: const BoxDecoration(
+            color: Colors.blue,
+            borderRadius: borderRadius,
+          ),
+          child: Center(
+            child: Text(
+              "${route.number}",
+              style: const TextStyle(color: Colors.white),
             ),
-            child: Text("${route.number}"),
           ),
-          title: Text(
-            route.description.join(' --->\n'),
-            style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                  color: Theme.of(context).textTheme.bodyLarge!.color,
-                ),
-          ),
-          trailing: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Interval",
-                style: Theme.of(context).textTheme.bodySmall,
+        ),
+        title: Text(
+          route.description.join(' --->\n'),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                color: Theme.of(context).textTheme.bodyLarge!.color,
               ),
-              const SizedBox(width: defaultPadding),
-              Container(
-                padding: const EdgeInsets.all(defaultPadding),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.blue,
-                  ),
-                  borderRadius: borderRadius / 2,
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Interval",
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(width: defaultPadding),
+            Container(
+              padding: const EdgeInsets.all(defaultPadding / 2),
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.blue,
                 ),
-                child: const Text("12m"),
-              )
-            ],
-          ),
+                borderRadius: borderRadius / 2,
+              ),
+              child: const Text("12m"),
+            )
+          ],
         ),
       ),
     );

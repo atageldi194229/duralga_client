@@ -13,6 +13,21 @@ class AppEventSelectRoute extends AppEvent {
 }
 
 @immutable
+class AppEventSelectStop extends AppEvent {
+  final StopModel stop;
+  AppEventSelectStop(this.stop);
+}
+
+@immutable
+class AppEventGoToRouteList extends AppEvent {}
+
+@immutable
+class AppEventGoToStopList extends AppEvent {}
+
+@immutable
+class AppEventGoToBack extends AppEvent {}
+
+@immutable
 class AppEventSearch extends AppEvent {
   final String search;
   AppEventSearch(this.search);

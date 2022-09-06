@@ -19,7 +19,8 @@ class App extends StatelessWidget {
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
         title: "Duralga Client",
-        theme: ThemeData.dark(),
+        themeMode: ThemeMode.light,
+        // theme: ThemeData.dark(),
         builder: (context, child) {
           return MultiBlocListener(
             listeners: [
