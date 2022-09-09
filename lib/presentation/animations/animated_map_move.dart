@@ -7,7 +7,7 @@ void animatedMapMove({
   required LatLng destLocation,
   double? destZoom,
   required TickerProvider vsync,
-  Duration duration = const Duration(microseconds: 500),
+  Duration duration = const Duration(milliseconds: 500),
 }) {
   // Create some tweens. These serve to split up the transition from one location to another.
   // In our case, we want to split the transition be<tween> our current map center and the destination.
@@ -27,13 +27,18 @@ void animatedMapMove({
   // Create a animation controller that has a duration and a TickerProvider.
   final controller = AnimationController(
     duration: duration,
+    value: 0.1,
     vsync: vsync,
   );
   // The animation determines what path the animation will take. You can try different Curves values, although I found
   // fastOutSlowIn to be my favorite.
-  final Animation<double> animation = CurvedAnimation(
-    parent: controller,
-    curve: Curves.fastOutSlowIn,
+  // final Animation<double> animation = CurvedAnimation(
+  //   parent: controller,
+  //   curve: Curves.fastOutSlowIn,
+  // );
+
+  final Animation<double> animation = controller.drive(
+    CurveTween(curve: Curves.fastOutSlowIn),
   );
 
   controller.addListener(() {

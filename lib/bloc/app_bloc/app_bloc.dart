@@ -25,10 +25,14 @@ class AppBloc extends Bloc<AppEvent, AppState> {
     AppState,
     [
       CustomRouter(AppStateRouteList, [
-        CustomRouter(AppStateRouteSelected),
+        CustomRouter(AppStateRouteSelected, [
+          CustomRouter(AppStateStopSelected),
+        ]),
       ]),
       CustomRouter(AppStateStopList, [
-        CustomRouter(AppStateStopSelected),
+        CustomRouter(AppStateStopSelected, [
+          CustomRouter(AppStateRouteSelected),
+        ]),
       ]),
       CustomRouter(AppStateSearch),
     ],

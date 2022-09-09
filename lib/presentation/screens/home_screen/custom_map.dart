@@ -1,6 +1,7 @@
 import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
 import 'package:duralga_client/bloc/map_bloc/map_bloc.dart';
 import 'package:duralga_client/data/models/stop_model.dart';
+import 'package:duralga_client/extensions/convert_stop_model_location_to_lat_lng.dart';
 import 'package:duralga_client/presentation/animations/animated_map_move.dart';
 import 'package:duralga_client/extensions/location_data_to_lat_lng_converter.dart';
 import 'package:duralga_client/presentation/constants.dart';
@@ -19,38 +20,7 @@ class CustomMap extends StatefulWidget {
 }
 
 class _CustomMapState extends State<CustomMap> with TickerProviderStateMixin {
-  late final MapController _mapController;
-
   LocationData? _currentLocation;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _mapController = MapController();
-  }
-
-  void updateCurrentLocation(LocationData result) async {
-    if (mounted) {
-      setState(() {
-        _currentLocation = result;
-
-        debugPrint("Current Location: ${[
-          result.latitude,
-          result.longitude,
-        ]}");
-
-        // If Live Update is enabled, move map center
-        _mapController.move(
-          LatLng(
-            _currentLocation!.latitude!,
-            _currentLocation!.longitude!,
-          ),
-          _mapController.zoom,
-        );
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +30,7 @@ class _CustomMapState extends State<CustomMap> with TickerProviderStateMixin {
           mapController: context.read<MapBloc>().mapController,
           destLocation: state.currentLocation!.latLng,
           vsync: this,
-          duration: const Duration(seconds: 3),
+          duration: const Duration(seconds: 1),
         );
       },
       builder: (context, state) {
@@ -100,10 +70,11 @@ class _CustomMapState extends State<CustomMap> with TickerProviderStateMixin {
                 mapController: context.read<MapBloc>().mapController,
                 destLocation: points1.first,
                 vsync: this,
+                duration: const Duration(seconds: 1),
               );
 
               return _buildMap(
-                stops: stops,
+                markers: stops.map<Marker>(_buildStopMarker),
                 polylines: [
                   Polyline(
                     points: points1,
@@ -120,53 +91,73 @@ class _CustomMapState extends State<CustomMap> with TickerProviderStateMixin {
             }
 
             if (state is AppStateStopSelected) {
+              animatedMapMove(
+                mapController: context.read<MapBloc>().mapController,
+                destLocation: state.stop.latLng,
+                vsync: this,
+                duration: const Duration(seconds: 1),
+                destZoom: 16,
+              );
+
               return _buildMap(
-                stops: [state.stop],
-                center: LatLng(
-                  double.parse(state.stop.location[0]),
-                  double.parse(state.stop.location[1]),
-                ),
+                markers: state.stops.map<Marker>((stop) {
+                  if (stop.id == state.stop.id) {
+                    return _buildStopMarker(stop, selected: true);
+                  }
+                  return _buildStopMarker(stop);
+                }),
+                center: state.stop.latLng,
                 zoom: 17,
               );
             }
 
-            return _buildMap(stops: state.stops.toList());
+            return _buildMap(
+              markers: state.stops.map<Marker>(_buildStopMarker),
+            );
           },
         );
       },
     );
   }
 
+  Marker _buildStopMarker(
+    StopModel stop, {
+    bool selected = false,
+  }) {
+    final busStopMarkerPng = ColorFiltered(
+      colorFilter: ColorFilter.mode(
+        !selected ? Colors.blue : Colors.green,
+        BlendMode.srcIn,
+      ),
+      child: Image.asset(
+        "assets/png/bus_stop.png",
+        // width: 20 * makeBigger,
+        // height: 20 * makeBigger,
+      ),
+    );
+
+    double makeBigger = selected ? 2.5 : 1.5;
+
+    return Marker(
+      width: 15 * makeBigger,
+      height: 15 * makeBigger,
+      point: stop.latLng,
+      anchorPos: AnchorPos.align(AnchorAlign.top),
+      builder: (context) => GestureDetector(
+        onTap: () {
+          context.read<AppBloc>().add(AppEventSelectStop(stop));
+        },
+        child: busStopMarkerPng,
+      ),
+    );
+  }
+
   _buildMap({
-    List<StopModel> stops = const [],
+    Iterable<Marker> markers = const [],
     List<Polyline>? polylines,
     LatLng? center,
     double zoom = 15.0,
   }) {
-    final busStopMarkerPng = Image.asset(
-      "assets/png/bus_stop.png",
-      width: 20,
-      height: 20,
-    );
-
-    final markers = stops.map<Marker>((e) {
-      final point = LatLng(
-        double.parse(e.location[0]),
-        double.parse(e.location[1]),
-      );
-
-      return Marker(
-        point: point,
-        anchorPos: AnchorPos.align(AnchorAlign.top),
-        builder: (context) => GestureDetector(
-          onTap: () {
-            debugPrint(point.toString());
-          },
-          child: busStopMarkerPng,
-        ),
-      );
-    }).toList();
-
     Marker? currentLocationMarker;
     LayerOptions? currentLocationLayerOptions;
 
@@ -226,7 +217,7 @@ class _CustomMapState extends State<CustomMap> with TickerProviderStateMixin {
           centerMarkerOnClick: true,
           zoomToBoundsOnClick: true,
           maxClusterRadius: 100,
-          size: const Size(40, 40),
+          size: const Size(20, 20),
           disableClusteringAtZoom: 15,
           fitBoundsOptions: const FitBoundsOptions(
             padding: EdgeInsets.all(defaultPadding * 6),
@@ -237,7 +228,7 @@ class _CustomMapState extends State<CustomMap> with TickerProviderStateMixin {
             spiderfy: Duration(seconds: 0),
             zoom: Duration(seconds: 0),
           ),
-          markers: markers,
+          markers: markers.toList(),
           polygonOptions: const PolygonOptions(
             // borderColor: kBlueColor,
             color: Colors.black12,

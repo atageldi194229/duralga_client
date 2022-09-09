@@ -1,6 +1,8 @@
+import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
 import 'package:duralga_client/data/models/route_model.dart';
 import 'package:duralga_client/presentation/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RouteRow extends StatelessWidget {
   const RouteRow(
@@ -27,10 +29,15 @@ class RouteRow extends StatelessWidget {
           color: Colors.blue,
           borderRadius: borderRadius,
         ),
-        child: Center(
-          child: Text(
-            "${route.number}",
-            style: const TextStyle(color: Colors.white),
+        child: InkWell(
+          onTap: () {
+            context.read<AppBloc>().add(AppEventSelectRoute(route));
+          },
+          child: Center(
+            child: Text(
+              "${route.number}",
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         ),
       ),

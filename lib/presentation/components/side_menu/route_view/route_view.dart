@@ -50,6 +50,11 @@ class RouteView extends HookWidget {
           ),
           Expanded(
             child: Stepper(
+              onStepTapped: (value) {
+                context
+                    .read<AppBloc>()
+                    .add(AppEventSelectStop(stops.toList()[value]));
+              },
               currentStep: 1,
               margin: const EdgeInsets.all(0),
               controlsBuilder: (context, details) => Row(),
