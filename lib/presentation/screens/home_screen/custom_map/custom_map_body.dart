@@ -61,8 +61,8 @@ class _CustomMapBodyState extends State<CustomMapBody>
             return CustomMap(
               layers: [
                 buildRouteLayer(state.route),
-                if (state.busCollection == null)
-                  buildClusteredStopsLayer(stops),
+                // if (state.busCollection == null)
+                buildClusteredStopsLayer(stops),
                 if (state.busCollection != null)
                   ...buildRouteBusesLayers(state.busCollection!, state.route),
               ],
