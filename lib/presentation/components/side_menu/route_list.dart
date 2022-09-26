@@ -50,7 +50,9 @@ class RouteRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        // context.read<LoadingBloc>().add(const StartLoadingEvent());
+
         context.read<AppBloc>().add(AppEventSelectRoute(route));
       },
       child: ListTile(

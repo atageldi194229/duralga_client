@@ -48,7 +48,7 @@ dependencies:
   flutter_map_marker_cluster: ^0.5.4
   flutter_svg: ^1.1.4
   string_similarity: ^2.0.0
-  # dotted_border: ^2.0.0+2
+  flutter_map_location_marker: ^4.1.4
 
 dev_dependencies:
   flutter_test:

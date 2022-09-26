@@ -1,5 +1,7 @@
 import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
+import 'package:duralga_client/data/models/stop_arrival_time_response_model_2.dart';
 import 'package:duralga_client/data/models/stop_model.dart';
+import 'package:duralga_client/data/repositories/duralga_data_repository.dart';
 import 'package:duralga_client/presentation/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,9 +56,33 @@ class StopView extends HookWidget {
           ],
         ),
       ),
-      ...routes.map(
-        (route) => RouteRow(route),
+      FutureBuilder<StopArrivalTimeResponse2>(
+        future: DuralgaDataRepository().getStopArrivalTimes2(stop.stopId),
+        builder: (context, snapshot) {
+          List<Widget> children = [];
+          if (snapshot.hasData) {
+            for (String key in snapshot.data!.arrivalTimeByRouteNumber.keys) {
+              final times = snapshot.data!.arrivalTimeByRouteNumber[key];
+              final routeNumber = int.parse(key);
+
+              children.add(
+                RouteRow(
+                    routes.firstWhere((e) => e.number == routeNumber), times!),
+              );
+            }
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            );
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
+      // ...routes.map(
+      //   (route) => RouteRow(route),
+      // ),
     ];
 
     return SliverList(

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:duralga_client/extensions/location_data_to_lat_lng_converter.dart';
+import 'package:duralga_client/extensions/convert_to_lat_lng.dart';
 import 'package:flutter/foundation.dart' show immutable, kIsWeb;
 import 'package:flutter/material.dart' show debugPrint;
 import 'package:flutter/services.dart';
@@ -33,6 +33,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       emit(MapState(currentLocation: event.location));
 
       mapController.move(event.location.latLng, mapController.zoom);
+    });
+
+    on<MapEventToggleLiveCurrentLocation>((event, emit) {
+      emit(MapState(currentLocation: state.currentLocation, live: !state.live));
     });
   }
 

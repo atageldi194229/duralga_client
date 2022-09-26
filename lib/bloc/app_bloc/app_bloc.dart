@@ -3,6 +3,7 @@ import 'package:duralga_client/bloc/app_error_bloc/app_error_bloc.dart';
 import 'package:duralga_client/bloc/loading_bloc/loading_bloc.dart';
 import 'package:duralga_client/data/errors/app_error.dart';
 import 'package:duralga_client/data/models/duralga_data_model.dart';
+import 'package:duralga_client/data/models/route_bus_collection_model.dart';
 import 'package:duralga_client/data/models/route_model.dart';
 import 'package:duralga_client/data/models/stop_model.dart';
 import 'package:duralga_client/data/repositories/duralga_data_repository.dart';
@@ -11,7 +12,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
 import 'package:string_similarity/string_similarity.dart';
 
 part 'app_event.dart';
@@ -78,11 +78,24 @@ class AppBloc extends Bloc<AppEvent, AppState> {
       appErrorBloc.add(const AppErrorAddEvent(LoadError()));
     });
 
-    on<AppEventSelectRoute>((event, emit) {
+    on<AppEventSelectRoute>((event, emit) async {
       emit(_navigator.push(AppStateRouteSelected(
         state: state,
         route: event.route,
       )));
+
+      try {
+        final data = await DuralgaDataRepository()
+            .getRouteBusCollection(event.route.number);
+
+        emit(_navigator.push(AppStateRouteSelected(
+          state: state,
+          route: event.route,
+          busCollection: data,
+        )));
+      } catch (_) {
+        appErrorBloc.add(const AppErrorAddEvent(LoadError()));
+      }
     });
 
     on<AppEventSelectStop>((event, emit) {
@@ -170,31 +183,31 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         : [];
   }
 
-  Future<LatLng?> getCurrentLocation() async {
-    Location location = Location();
+  // Future<LatLng?> getCurrentLocation() async {
+  //   Location location = Location();
 
-    bool serviceEnabled;
-    PermissionStatus permissionGranted;
-    LocationData locationData;
+  //   bool serviceEnabled;
+  //   PermissionStatus permissionGranted;
+  //   LocationData locationData;
 
-    serviceEnabled = await location.serviceEnabled();
-    if (!serviceEnabled) {
-      serviceEnabled = await location.requestService();
-      if (!serviceEnabled) {
-        return null;
-      }
-    }
+  //   serviceEnabled = await location.serviceEnabled();
+  //   if (!serviceEnabled) {
+  //     serviceEnabled = await location.requestService();
+  //     if (!serviceEnabled) {
+  //       return null;
+  //     }
+  //   }
 
-    permissionGranted = await location.hasPermission();
-    if (permissionGranted == PermissionStatus.denied) {
-      permissionGranted = await location.requestPermission();
-      if (permissionGranted != PermissionStatus.granted) {
-        return null;
-      }
-    }
+  //   permissionGranted = await location.hasPermission();
+  //   if (permissionGranted == PermissionStatus.denied) {
+  //     permissionGranted = await location.requestPermission();
+  //     if (permissionGranted != PermissionStatus.granted) {
+  //       return null;
+  //     }
+  //   }
 
-    locationData = await location.getLocation();
+  //   locationData = await location.getLocation();
 
-    return LatLng(locationData.latitude!, locationData.longitude!);
-  }
+  //   return LatLng(locationData.latitude!, locationData.longitude!);
+  // }
 }

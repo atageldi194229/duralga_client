@@ -1,6 +1,7 @@
 import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
 import 'package:duralga_client/data/models/route_model.dart';
 import 'package:duralga_client/data/models/stop_model.dart';
+import 'package:duralga_client/presentation/components/route_number_widget.dart';
 import 'package:duralga_client/presentation/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,16 +23,37 @@ class RouteView extends HookWidget {
             (stopId) => allStops.firstWhere((e) => e.stopId == stopId));
 
     final widgets = <Widget>[
+      Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: defaultPadding,
+          horizontal: defaultPadding * 2,
+        ),
+        child: Row(
+          children: [
+            RouteNumberWidget(route),
+            const SizedBox(width: defaultPadding),
+            Text(
+              route.description.join("-->"),
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ],
+        ),
+      ),
       Container(
         padding: const EdgeInsets.all(defaultPadding).copyWith(
           left: defaultPadding * 3,
         ),
-        child: Row(
-          children: [
-            Text("Stops", style: Theme.of(context).textTheme.bodyLarge),
-            const SizedBox(width: defaultPadding),
-            Image.asset("assets/png/up_down_arrow.png"),
-          ],
+        child: InkWell(
+          onTap: () {
+            showStart.value = !showStart.value;
+          },
+          child: Row(
+            children: [
+              Text("Stops", style: Theme.of(context).textTheme.bodyLarge),
+              const SizedBox(width: defaultPadding),
+              Image.asset("assets/png/up_down_arrow.png"),
+            ],
+          ),
         ),
       ),
       Row(
@@ -50,6 +72,7 @@ class RouteView extends HookWidget {
           ),
           Expanded(
             child: Stepper(
+              physics: const ClampingScrollPhysics(),
               onStepTapped: (value) {
                 context
                     .read<AppBloc>()

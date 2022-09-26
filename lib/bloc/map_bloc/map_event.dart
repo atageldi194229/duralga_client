@@ -7,6 +7,9 @@ abstract class MapEvent {}
 class MapEventLoadCurrentLocation extends MapEvent {}
 
 @immutable
+class MapEventToggleLiveCurrentLocation extends MapEvent {}
+
+@immutable
 class MapEventCurrentLocationUpdate extends MapEvent {
   final LocationData location;
   MapEventCurrentLocationUpdate(this.location);
