@@ -44,7 +44,7 @@ class RouteRow extends StatelessWidget {
                 String text = "---";
                 final time = times[index];
 
-                if (time != null && time < 900) {
+                if (time != null && time < 900 * 60) {
                   text = (time.toInt() ~/ 60).toString();
                 }
 
