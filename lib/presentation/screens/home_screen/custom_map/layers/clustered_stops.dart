@@ -7,13 +7,21 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import '../markers/bus_stop_marker.dart';
 
 LayerOptions buildClusteredStopsLayer(Iterable<StopModel> stops) {
-  final markers = stops.map(buildBusStopMarker).toList();
+  // final markers = stops.map((stop) => buildBusStopMarker(stop, tool)).toList();
+
+  List<Marker> markers = [];
+
+  final stopList = stops.toList();
+
+  for (var i = 0; i < stopList.length; i++) {
+    markers.add(buildBusStopMarker(stopList[i], tooltip: "No$i"));
+  }
 
   return MarkerClusterLayerOptions(
     centerMarkerOnClick: true,
     zoomToBoundsOnClick: true,
     maxClusterRadius: 100,
-    size: const Size(20, 20),
+    // size: const Size(20, 20),
     disableClusteringAtZoom: 15,
     fitBoundsOptions: const FitBoundsOptions(
       padding: EdgeInsets.all(defaultPadding * 6),

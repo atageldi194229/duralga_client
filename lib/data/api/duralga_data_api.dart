@@ -16,6 +16,11 @@ class DuralgaDataApi {
         loader: (path) => ApiClient().dio.get(path),
       );
 
+  ApiLoader getStopArrivalTimes3(int stopId) => ApiLoader(
+        path: ":3051/api/arrival/stop3/$stopId",
+        loader: (path) => ApiClient().dio.get(path),
+      );
+
   ApiLoader getRouteBusCollection(int routeNumber) => ApiLoader(
         path: ":3051/api/routes/buses2/$routeNumber",
         loader: (path) => ApiClient().dio.get(path),

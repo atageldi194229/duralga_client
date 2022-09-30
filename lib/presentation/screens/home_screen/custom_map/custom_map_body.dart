@@ -7,6 +7,7 @@ import 'package:duralga_client/presentation/screens/home_screen/custom_map/custo
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/layers/bus_collection_layers.dart';
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/layers/clustered_stops.dart';
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/layers/route_layer.dart';
+import 'package:duralga_client/presentation/screens/home_screen/custom_map/layers/stops_layer.dart';
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/markers/bus_stop_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,6 +46,12 @@ class _CustomMapBodyState extends State<CustomMapBody>
               ...state.route.endStops
             ];
 
+            // final startStops = state.stops
+            //     .where(
+            //       (e) => state.route.startStops.contains(e.stopId),
+            //     )
+            //     .toList();
+
             final stops = state.stops
                 .where(
                   (e) => stopIds.contains(e.stopId),
@@ -62,9 +69,10 @@ class _CustomMapBodyState extends State<CustomMapBody>
               layers: [
                 buildRouteLayer(state.route),
                 // if (state.busCollection == null)
-                buildClusteredStopsLayer(stops),
+                // buildClusteredStopsLayer(stops),
                 if (state.busCollection != null)
                   ...buildRouteBusesLayers(state.busCollection!, state.route),
+                buildStopsLayer(stops),
               ],
             );
           }

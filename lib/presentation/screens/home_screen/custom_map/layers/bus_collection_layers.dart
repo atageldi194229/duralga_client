@@ -34,13 +34,14 @@ Iterable<LayerOptions> buildRouteBusesLayers(
 
     // debugPrint("length: ${bus.locations.length}");
 
-    polylines.add(Polyline(
-      strokeWidth: 4,
-      color: color,
-      points: bus.locations
-          .map<LatLng>((e) => LatLng(e.point[0], e.point[1]))
-          .toList(),
-    ));
+    // lineString that shows buses last points
+    // polylines.add(Polyline(
+    //   strokeWidth: 4,
+    //   color: color,
+    //   points: bus.locations
+    //       .map<LatLng>((e) => LatLng(e.point[0], e.point[1]))
+    //       .toList(),
+    // ));
 
     originalBuses.add(buildBusMarker(
       point: point,
@@ -65,6 +66,7 @@ Iterable<LayerOptions> buildRouteBusesLayers(
       bearing: bearing,
     ));
 
+    // line between original bus and onroad bus
     polylines.add(Polyline(
       strokeWidth: 2,
       color: color,
@@ -78,7 +80,10 @@ Iterable<LayerOptions> buildRouteBusesLayers(
       polylines: polylines,
     ),
     MarkerLayerOptions(
-      markers: [...originalBuses, ...busesOnTheRoad],
+      markers: [
+        // ...originalBuses,
+        ...busesOnTheRoad,
+      ],
     ),
   ];
 }

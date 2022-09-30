@@ -4,22 +4,20 @@ import 'package:duralga_client/extensions/convert_stop_model_location_to_lat_lng
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 Marker buildBusStopMarker(
   StopModel stop, {
   bool selected = false,
+  String tooltip = "?",
 }) {
-  final busStopMarkerPng = ColorFiltered(
-    colorFilter: ColorFilter.mode(
-      !selected ? Colors.blue : Colors.green,
-      BlendMode.srcIn,
-    ),
-    child: Image.asset(
-      "assets/png/bus_stop.png",
-      // width: 20 * makeBigger,
-      // height: 20 * makeBigger,
-    ),
-  );
+  final busStopMarkerPng =
+      SvgPicture.asset("assets/svg/ostanowka_location.svg");
+  // child: Image.asset(
+  //   "assets/png/bus_stop.png",
+  //   // width: 20 * makeBigger,
+  //   // height: 20 * makeBigger,
+  // ),
 
   double makeBigger = selected ? 2.5 : 1.5;
 
@@ -32,7 +30,10 @@ Marker buildBusStopMarker(
       onTap: () {
         context.read<AppBloc>().add(AppEventSelectStop(stop));
       },
-      child: busStopMarkerPng,
+      child: Tooltip(
+        message: tooltip,
+        child: busStopMarkerPng,
+      ),
     ),
   );
 }

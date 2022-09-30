@@ -26,12 +26,12 @@ LayerOptions buildRouteLayer(RouteModel route) {
     Polyline(
       points: startPoints.toList(),
       strokeWidth: 4,
-      color: Colors.purple,
+      color: Colors.blueAccent,
     ),
     Polyline(
       points: endPoints.toList(),
       strokeWidth: 4,
-      color: Colors.green,
+      color: Colors.purple,
     ),
   ];
 

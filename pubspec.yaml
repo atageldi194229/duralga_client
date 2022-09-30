@@ -88,10 +88,22 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
-  #   - family: Schyler
+  #   - family: UniNeue
   #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  #       - asset: fonts/Fontfabric - UniNeueBlack-Italic.otf
+  #       - asset: fonts/Fontfabric - UniNeueBlack.otf
+  #       - asset: fonts/Fontfabric - UniNeueBold-Italic.otf
+  #       - asset: fonts/Fontfabric - UniNeueBold.otf
+  #       - asset: fonts/Fontfabric - UniNeueBook-Italic.otf
+  #       - asset: fonts/Fontfabric - UniNeueBook.otf
+  #       - asset: fonts/Fontfabric - UniNeueHeavy-Italic.otf
+  #       - asset: fonts/Fontfabric - UniNeueHeavy.otf
+  #       - asset: fonts/Fontfabric - UniNeueLight-Italic.otf
+  #       - asset: fonts/Fontfabric - UniNeueLight.otf
+  #       - asset: fonts/Fontfabric - UniNeueRegular-Italic.otf
+  #       - asset: fonts/Fontfabric - UniNeueRegular.otf
+  #       - asset: fonts/Fontfabric - UniNeueThin-Italic.otf
+  #       - asset: fonts/Fontfabric - UniNeueThin.otf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

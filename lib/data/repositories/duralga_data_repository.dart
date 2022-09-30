@@ -30,6 +30,14 @@ class DuralgaDataRepository {
     return StopArrivalTimeResponse2.fromMap(data);
   }
 
+  Future<StopArrivalTimeResponse2> getStopArrivalTimes3(int stopId) async {
+    final apiLoader = DuralgaDataApi().getStopArrivalTimes3(stopId);
+
+    final data = await apiLoader.dataLoader();
+
+    return StopArrivalTimeResponse2.fromMap(data);
+  }
+
   Future<RouteBusCollectionModel> getRouteBusCollection(int routeNumber) async {
     final apiLoader = DuralgaDataApi().getRouteBusCollection(routeNumber);
 

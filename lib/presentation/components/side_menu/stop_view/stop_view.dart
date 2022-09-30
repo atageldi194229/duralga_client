@@ -57,7 +57,7 @@ class StopView extends HookWidget {
         ),
       ),
       FutureBuilder<StopArrivalTimeResponse2>(
-        future: DuralgaDataRepository().getStopArrivalTimes2(stop.stopId),
+        future: DuralgaDataRepository().getStopArrivalTimes3(stop.stopId),
         builder: (context, snapshot) {
           List<Widget> children = [];
           if (snapshot.hasData) {
@@ -65,10 +65,13 @@ class StopView extends HookWidget {
               final times = snapshot.data!.arrivalTimeByRouteNumber[key];
               final routeNumber = int.parse(key);
 
-              children.add(
-                RouteRow(
-                    routes.firstWhere((e) => e.number == routeNumber), times!),
-              );
+              if (routes.any((e) => e.number == routeNumber)) {
+                final route = routes.firstWhere((e) => e.number == routeNumber);
+
+                children.add(
+                  RouteRow(route, times!),
+                );
+              }
             }
 
             return Column(
