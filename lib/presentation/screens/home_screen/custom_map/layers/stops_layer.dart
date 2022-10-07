@@ -9,7 +9,7 @@ LayerOptions buildStopsLayer(Iterable<StopModel> stops) {
   final stopList = stops.toList();
 
   for (var i = 0; i < stopList.length; i++) {
-    markers.add(buildBusStopMarker(stopList[i], tooltip: "No$i"));
+    markers.add(buildBusStopMarker(stopList[i], tooltip: stopList[i].name));
   }
 
   return MarkerLayerOptions(

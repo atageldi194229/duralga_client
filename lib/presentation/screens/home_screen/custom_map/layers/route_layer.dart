@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
-LayerOptions buildRouteLayer(RouteModel route) {
+LayerOptions buildRouteLayer(
+  RouteModel route, {
+  bool showStart = true,
+  bool showEnd = true,
+}) {
   final startPoints = route.startCoords
       .map(
         (e) => LatLng(
@@ -23,16 +27,18 @@ LayerOptions buildRouteLayer(RouteModel route) {
       .toList();
 
   final polylines = [
-    Polyline(
-      points: startPoints.toList(),
-      strokeWidth: 4,
-      color: Colors.blueAccent,
-    ),
-    Polyline(
-      points: endPoints.toList(),
-      strokeWidth: 4,
-      color: Colors.purple,
-    ),
+    if (showStart)
+      Polyline(
+        points: startPoints.toList(),
+        strokeWidth: 4,
+        color: Colors.blueAccent,
+      ),
+    if (showEnd)
+      Polyline(
+        points: endPoints.toList(),
+        strokeWidth: 4,
+        color: Colors.purple,
+      ),
   ];
 
   return PolylineLayerOptions(

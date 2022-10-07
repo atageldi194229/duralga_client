@@ -61,8 +61,27 @@ class StopView extends HookWidget {
         builder: (context, snapshot) {
           List<Widget> children = [];
           if (snapshot.hasData) {
-            for (String key in snapshot.data!.arrivalTimeByRouteNumber.keys) {
-              final times = snapshot.data!.arrivalTimeByRouteNumber[key];
+            final data = snapshot.data!.arrivalTimeByRouteNumber;
+            var keys = data.keys.toList();
+
+            keys.sort((a, b) {
+              final timesA = data[a];
+              final timesB = data[b];
+
+              if (timesA == null || timesA.isEmpty) return 1;
+              if (timesB == null || timesB.isEmpty) return 0;
+
+              final firstA = timesA[0];
+              final firstB = timesA[0];
+
+              if (firstA == null) return 1;
+              if (firstB == null) return 0;
+
+              return firstA.compareTo(firstB);
+            });
+
+            for (String key in keys) {
+              final times = data[key];
               final routeNumber = int.parse(key);
 
               if (routes.any((e) => e.number == routeNumber)) {

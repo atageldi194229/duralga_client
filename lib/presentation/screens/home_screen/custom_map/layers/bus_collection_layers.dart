@@ -64,6 +64,7 @@ Iterable<LayerOptions> buildRouteBusesLayers(
     busesOnTheRoad.add(buildBusMarker(
       point: point2,
       bearing: bearing,
+      tooltip: "${route.number}",
     ));
 
     // line between original bus and onroad bus

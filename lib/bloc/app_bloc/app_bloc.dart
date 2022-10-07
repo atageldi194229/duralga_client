@@ -40,6 +40,8 @@ class AppBloc extends Bloc<AppEvent, AppState> {
 
   Map<int, List<RouteModel>> stopRoutesMap = {};
 
+  StopModel? lastSelectedStop;
+
   AppBloc({
     required this.appErrorBloc,
     required this.loadingBloc,
@@ -103,6 +105,7 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         state: state,
         stop: event.stop,
       )));
+      lastSelectedStop = event.stop;
     });
 
     on<AppEventGoToRouteList>((event, emit) {
