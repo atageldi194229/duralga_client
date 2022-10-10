@@ -25,7 +25,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
           return;
         }
 
-        _initLocationService(event, emit);
+        // _initLocationService(event, emit);
       },
     );
 
