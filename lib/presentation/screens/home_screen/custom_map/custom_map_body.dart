@@ -9,6 +9,7 @@ import 'package:duralga_client/presentation/screens/home_screen/custom_map/layer
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/layers/route_layer.dart';
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/layers/stops_layer.dart';
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/markers/bus_stop_marker.dart';
+import 'package:duralga_client/presentation/screens/home_screen/custom_map/markers/i_am_here_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -78,10 +79,7 @@ class _CustomMapBodyState extends State<CustomMapBody>
                 if (lastSelectedStop != null)
                   MarkerLayerOptions(
                     markers: [
-                      buildBusStopMarker(
-                        lastSelectedStop,
-                        selected: true,
-                      )
+                      buildIAmHereMarker(lastSelectedStop),
                     ],
                   ),
               ],
@@ -106,10 +104,7 @@ class _CustomMapBodyState extends State<CustomMapBody>
                 ...routes.map((r) => buildRouteLayer(r)),
                 MarkerLayerOptions(
                   markers: [
-                    buildBusStopMarker(
-                      state.stop,
-                      selected: true,
-                    )
+                    buildIAmHereMarker(state.stop),
                   ],
                 ),
               ],
