@@ -26,7 +26,8 @@ jobs:
           password: ${{ secrets.HOST_PASSWORD }}
           script: |
             cd ~/flutter/deploys/duralga_client
-            git reset --hard origin/local-pages
+            git pull --rebase
+          # git reset --hard origin/local-pages 
 
           # script: |
           # git pull --rebase

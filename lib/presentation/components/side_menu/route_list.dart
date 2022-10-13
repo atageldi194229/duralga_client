@@ -1,16 +1,41 @@
 import 'package:duralga_client/bloc/app_bloc/app_bloc.dart';
 import 'package:duralga_client/data/models/route_model.dart';
+import 'package:duralga_client/data/models/route_time_intervals_response.dart';
+import 'package:duralga_client/data/repositories/duralga_data_repository.dart';
 import 'package:duralga_client/presentation/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RouteList extends StatelessWidget {
+class RouteList extends StatefulWidget {
   const RouteList({
     Key? key,
     this.scrollController,
   }) : super(key: key);
 
   final ScrollController? scrollController;
+
+  @override
+  State<RouteList> createState() => _RouteListState();
+}
+
+class _RouteListState extends State<RouteList> {
+  RouteTimeIntervalsResponse? intervalData;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      debugPrint("Load route time interval");
+      DuralgaDataRepository().getRouteTimeIntervals().then((value) {
+        setState(() {
+          intervalData = value;
+        });
+      }).catchError((err) {
+        debugPrint("$err");
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +52,23 @@ class RouteList extends StatelessWidget {
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
+              final route = routes[index];
+              double? intervalTime;
+
+              if (intervalData != null) {
+                if (intervalData!.routeTimeIntervals
+                    .containsKey(route.number.toString())) {
+                  intervalTime =
+                      intervalData!.routeTimeIntervals[route.number.toString()];
+                }
+              }
+
               return Column(
                 children: [
-                  RouteRow(routes[index]),
+                  RouteRow(
+                    route,
+                    intervalTime: intervalTime ?? 99,
+                  ),
                   const Divider(),
                 ],
               );
@@ -43,9 +82,14 @@ class RouteList extends StatelessWidget {
 }
 
 class RouteRow extends StatelessWidget {
-  const RouteRow(this.route, {Key? key}) : super(key: key);
+  const RouteRow(
+    this.route, {
+    Key? key,
+    this.intervalTime = 99,
+  }) : super(key: key);
 
   final RouteModel route;
+  final double intervalTime;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +141,7 @@ class RouteRow extends StatelessWidget {
                 ),
                 borderRadius: borderRadius / 2,
               ),
-              child: const Text("12m"),
+              child: Text("${intervalTime.ceil()}m"),
             )
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:duralga_client/data/api/duralga_data_api.dart';
 import 'package:duralga_client/data/models/duralga_data_model.dart';
 import 'package:duralga_client/data/models/route_bus_collection_model.dart';
+import 'package:duralga_client/data/models/route_time_intervals_response.dart';
 import 'package:duralga_client/data/models/stop_arrival_time_response_model.dart';
 import 'package:duralga_client/data/models/stop_arrival_time_response_model_2.dart';
 import 'package:duralga_client/data/storage/storage.dart';
@@ -44,5 +45,13 @@ class DuralgaDataRepository {
     final data = await apiLoader.dataLoader();
 
     return RouteBusCollectionModel.fromMap(data);
+  }
+
+  Future<RouteTimeIntervalsResponse> getRouteTimeIntervals() async {
+    final apiLoader = DuralgaDataApi().getRouteTimeIntervals();
+
+    final data = await apiLoader.dataLoader();
+
+    return RouteTimeIntervalsResponse.fromMap(data);
   }
 }

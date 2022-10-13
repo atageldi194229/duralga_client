@@ -25,4 +25,9 @@ class DuralgaDataApi {
         path: ":3051/api/routes/buses2/$routeNumber",
         loader: (path) => ApiClient().dio.get(path),
       );
+
+  ApiLoader getRouteTimeIntervals() => ApiLoader(
+        path: ":3051/api/duralga/route-time-intervals",
+        loader: (path) => ApiClient().dio.get(path),
+      );
 }
