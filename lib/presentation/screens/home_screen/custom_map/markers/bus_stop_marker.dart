@@ -22,7 +22,6 @@ Marker buildBusStopMarker(
   double makeBigger = selected ? 2.5 : 1.5;
 
   return Marker(
-    rotate: true,
     width: 15 * makeBigger,
     height: 15 * makeBigger,
     point: stop.latLng,

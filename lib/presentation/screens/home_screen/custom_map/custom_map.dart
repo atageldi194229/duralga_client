@@ -16,6 +16,7 @@ final mapOptions = MapOptions(
   zoom: 15.0,
   maxZoom: 18.0,
   minZoom: 8.0,
+  interactiveFlags: InteractiveFlag.pinchZoom | InteractiveFlag.drag,
 );
 
 class CustomMap extends StatelessWidget {

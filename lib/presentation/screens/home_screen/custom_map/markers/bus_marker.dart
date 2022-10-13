@@ -42,7 +42,6 @@ Marker buildBusMarker({
   double size = 18;
 
   return Marker(
-    rotate: true,
     width: size * makeBigger,
     height: size * makeBigger,
     point: point,
