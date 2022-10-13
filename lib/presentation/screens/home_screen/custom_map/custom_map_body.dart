@@ -65,14 +65,25 @@ class _CustomMapBodyState extends State<CustomMapBody>
             //   duration: const Duration(seconds: 1),
             // );
 
+            final lastSelectedStop = context.read<AppBloc>().lastSelectedStop;
+
             return CustomMap(
               layers: [
                 buildRouteLayer(state.route),
                 // if (state.busCollection == null)
                 // buildClusteredStopsLayer(stops),
+                buildStopsLayer(stops),
                 if (state.busCollection != null)
                   ...buildRouteBusesLayers(state.busCollection!, state.route),
-                buildStopsLayer(stops),
+                if (lastSelectedStop != null)
+                  MarkerLayerOptions(
+                    markers: [
+                      buildBusStopMarker(
+                        lastSelectedStop,
+                        selected: true,
+                      )
+                    ],
+                  ),
               ],
             );
           }
@@ -86,11 +97,13 @@ class _CustomMapBodyState extends State<CustomMapBody>
               destZoom: 16,
             );
 
-            final stops = state.stops.where((stop) => stop.id != state.stop.id);
+            // final stops = state.stops.where((stop) => stop.id != state.stop.id);
+            final routes = context.read<AppBloc>().getStopRoutes(state.stop);
 
             return CustomMap(
               layers: [
-                buildClusteredStopsLayer(stops),
+                // buildClusteredStopsLayer(stops),
+                ...routes.map((r) => buildRouteLayer(r)),
                 MarkerLayerOptions(
                   markers: [
                     buildBusStopMarker(

@@ -1,6 +1,7 @@
 import 'package:duralga_client/data/models/route_bus_collection_model.dart';
 import 'package:duralga_client/data/models/route_model.dart';
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/markers/bus_marker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -76,10 +77,11 @@ Iterable<LayerOptions> buildRouteBusesLayers(
   }
 
   return [
-    PolylineLayerOptions(
-      polylineCulling: false,
-      polylines: polylines,
-    ),
+    if (!kReleaseMode)
+      PolylineLayerOptions(
+        polylineCulling: false,
+        polylines: polylines,
+      ),
     MarkerLayerOptions(
       markers: [
         // ...originalBuses,
