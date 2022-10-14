@@ -8,7 +8,6 @@ import 'package:duralga_client/presentation/screens/home_screen/custom_map/layer
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/layers/clustered_stops.dart';
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/layers/route_layer.dart';
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/layers/stops_layer.dart';
-import 'package:duralga_client/presentation/screens/home_screen/custom_map/markers/bus_stop_marker.dart';
 import 'package:duralga_client/presentation/screens/home_screen/custom_map/markers/i_am_here_marker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,6 +41,8 @@ class _CustomMapBodyState extends State<CustomMapBody>
       builder: (context, mapBlocState) => BlocBuilder<AppBloc, AppState>(
         builder: (context, state) {
           if (state is AppStateRouteSelected) {
+            List<LayerOptions> layers = [];
+
             final stopIds = [
               ...state.route.startStops,
               ...state.route.endStops
@@ -59,30 +60,40 @@ class _CustomMapBodyState extends State<CustomMapBody>
                 )
                 .toList();
 
-            // animatedMapMove(
-            //   mapController: context.read<MapBloc>().mapController,
-            //   destLocation: stops.first.latLng,
-            //   vsync: this,
-            //   duration: const Duration(seconds: 1),
-            // );
+            if (state is! AppStateRouteSelectedBuses) {
+              animatedMapMove(
+                mapController: context.read<MapBloc>().mapController,
+                destLocation: stops.first.latLng,
+                vsync: this,
+                duration: const Duration(seconds: 1),
+              );
+            }
 
             final lastSelectedStop = context.read<AppBloc>().lastSelectedStop;
 
+            layers.addAll([
+              buildRouteLayer(state.route),
+              buildStopsLayer(stops),
+            ]);
+
+            if (lastSelectedStop != null) {
+              layers.add(MarkerLayerOptions(
+                markers: [
+                  buildIAmHereMarker(lastSelectedStop),
+                ],
+              ));
+            }
+
+            if (state is AppStateRouteSelectedBuses) {
+              layers.addAll(
+                buildRouteBusesLayers(state.busCollection, state.route),
+              );
+            }
+
             return CustomMap(
-              layers: [
-                buildRouteLayer(state.route),
-                // if (state.busCollection == null)
-                // buildClusteredStopsLayer(stops),
-                buildStopsLayer(stops),
-                if (state.busCollection != null)
-                  ...buildRouteBusesLayers(state.busCollection!, state.route),
-                if (lastSelectedStop != null)
-                  MarkerLayerOptions(
-                    markers: [
-                      buildIAmHereMarker(lastSelectedStop),
-                    ],
-                  ),
-              ],
+              layers: layers,
+              // if (state.busCollection == null)
+              // buildClusteredStopsLayer(stops),
             );
           }
 

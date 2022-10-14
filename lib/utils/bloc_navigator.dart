@@ -59,4 +59,8 @@ class BlocNavigator<T> {
     if (list.length > 1) list.removeLast();
     return list.last;
   }
+
+  T last() {
+    return list.last;
+  }
 }

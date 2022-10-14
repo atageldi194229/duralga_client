@@ -13,6 +13,12 @@ class AppEventSelectRoute extends AppEvent {
 }
 
 @immutable
+class AppEventHandleBuses extends AppEvent {
+  final RouteBusCollectionModel busCollection;
+  AppEventHandleBuses(this.busCollection);
+}
+
+@immutable
 class AppEventSelectStop extends AppEvent {
   final StopModel stop;
   AppEventSelectStop(this.stop);

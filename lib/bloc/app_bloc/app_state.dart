@@ -38,12 +38,21 @@ class AppStateStopList extends AppState {
 @immutable
 class AppStateRouteSelected extends AppStateRouteList {
   final RouteModel route;
-  final RouteBusCollectionModel? busCollection;
 
   AppStateRouteSelected({
     required super.state,
     required this.route,
-    this.busCollection,
+  });
+}
+
+@immutable
+class AppStateRouteSelectedBuses extends AppStateRouteSelected {
+  final RouteBusCollectionModel busCollection;
+
+  AppStateRouteSelectedBuses({
+    required super.state,
+    required super.route,
+    required this.busCollection,
   });
 }
 

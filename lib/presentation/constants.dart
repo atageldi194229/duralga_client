@@ -6,10 +6,10 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 final tileLayerOptions = TileLayerOptions(
   tileProvider: CachedTileProvider(),
-  urlTemplate: "https://geo.asmantiz.com/tile/{z}/{x}/{y}.png",
+  // urlTemplate: "https://geo.asmantiz.com/tile/{z}/{x}/{y}.png",
 
-  // urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  // subdomains: ['a', 'b', 'c'],
+  urlTemplate: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  subdomains: ['a', 'b', 'c'],
 );
 
 const borderRadius = BorderRadius.all(Radius.circular(10));

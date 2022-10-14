@@ -8,6 +8,7 @@ import 'package:duralga_client/data/models/route_model.dart';
 import 'package:duralga_client/data/models/stop_model.dart';
 import 'package:duralga_client/data/repositories/duralga_data_repository.dart';
 import 'package:duralga_client/utils/bloc_navigator.dart';
+import 'package:duralga_client/utils/infinity_fetcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +21,9 @@ part 'app_state.dart';
 class AppBloc extends Bloc<AppEvent, AppState> {
   final AppErrorBloc appErrorBloc;
   final LoadingBloc loadingBloc;
+  final InfinityFetcher busInfinityFetcher = InfinityFetcher();
 
-  final BlocNavigator _navigator = BlocNavigator(CustomRouter(
+  final BlocNavigator _navigator = BlocNavigator<AppState>(CustomRouter(
     AppState,
     [
       CustomRouter(AppStateRouteList, [
@@ -86,17 +88,34 @@ class AppBloc extends Bloc<AppEvent, AppState> {
         route: event.route,
       )));
 
-      try {
-        final data = await DuralgaDataRepository()
-            .getRouteBusCollection(event.route.number);
+      busInfinityFetcher.start(
+        duration: const Duration(seconds: 2),
+        callback: () async {
+          debugPrint("HEY");
+          try {
+            final data = await DuralgaDataRepository()
+                .getRouteBusCollection(event.route.number);
 
-        emit(_navigator.push(AppStateRouteSelected(
+            add(AppEventHandleBuses(data));
+          } catch (err) {
+            debugPrint("$err");
+            // appErrorBloc.add(const AppErrorAddEvent(LoadError()));
+          }
+        },
+      );
+    });
+
+    on<AppEventHandleBuses>((event, emit) async {
+      AppState lastState = _navigator.last();
+
+      if (lastState is AppStateRouteSelected) {
+        emit(AppStateRouteSelectedBuses(
           state: state,
-          route: event.route,
-          busCollection: data,
-        )));
-      } catch (_) {
-        appErrorBloc.add(const AppErrorAddEvent(LoadError()));
+          route: lastState.route,
+          busCollection: event.busCollection,
+        ));
+      } else {
+        busInfinityFetcher.stop();
       }
     });
 
